@@ -2619,6 +2619,26 @@ class Map extends Camera {
         }
     }
 
+    /**
+     * Cancel any pending frame update and start a (synchronous) render. Use this
+     * method if you are integrating maplibre with another framework and you require
+     * better render syncing between the two frameworks. Be aware that this might
+     * result in more renders being called, resulting in a loss in performance.
+     * @example
+     * map.forceRepaint();
+     */
+    forceRepaint() {
+        if (this.style) {
+            // cancelling any pending update
+            if (this._frame) {
+                this._frame.cancel();
+                this._frame = null;
+            }
+            // starting a new render synchronously
+            this._render();
+        }
+    }
+
     _onWindowOnline() {
         this._update();
     }
